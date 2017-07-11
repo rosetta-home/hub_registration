@@ -1,0 +1,3 @@
+defmodule HubRegistration do
+  
+end
