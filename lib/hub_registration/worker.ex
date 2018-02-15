@@ -3,8 +3,8 @@ defmodule HubRegistration.Worker do
   require Logger
   alias Nerves.Leds
 
-  @ssid System.get_env("SSID")
-  @psk System.get_env("PSK")
+  #@ssid System.get_env("SSID")
+  #@psk System.get_env("PSK")
   @registration_url System.get_env("REGISTRATION_URL")
 
   @success_duration  100 # ms
@@ -16,7 +16,6 @@ defmodule HubRegistration.Worker do
 
   def init(:ok) do
     SystemRegistry.register
-    Process.send_after(self(), :init_network, 0)
     {:ok, {"wlan0", nil}}
   end
 
@@ -24,16 +23,15 @@ defmodule HubRegistration.Worker do
     ip = get_in(registry, [:state, :network_interface, "wlan0", :ipv4_address])
 
     if ip != current do
-      Logger.debug("Registry: #{inspect registry}")
-      Logger.debug "IP Address Changed: #{ip}"
+      Logger.info("Registry: #{inspect registry}")
+      Logger.info "IP Address Changed: #{ip}"
       register_device()
     end
     {:noreply, {iface, ip}}
   end
 
-  def handle_info(:init_network, state) do
-    Nerves.Network.setup "wlan0", ssid: @ssid, key_mgmt: :"WPA-PSK", psk: @psk
-    {:noreply, state}
+  def handle_info({:system_registry, _, _}, {iface, current}) do
+    {:noreply, {iface, current}}
   end
 
   defp register_device() do
