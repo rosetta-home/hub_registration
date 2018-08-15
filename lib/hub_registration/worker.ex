@@ -42,6 +42,7 @@ defmodule HubRegistration.Worker do
 
   defp post({:ok, mac_address}) do
     Logger.info "POSTING: #{@registration_url}"
+    Logger.info "ID: #{inspect mac_address}"
     case HTTPoison.post(@registration_url, {:form, [{:mac_address, mac_address}]}, [{"content-type", "application/x-www-form-urlencoded"}]) do
       {:ok, %HTTPoison.Response{status_code: 200}} -> :success
       {_other, %HTTPoison.Response{} = resp} ->

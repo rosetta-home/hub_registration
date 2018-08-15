@@ -10,9 +10,9 @@ defmodule HubRegistration.Mixfile do
   def project do
     [app: :hub_registration,
      version: "0.1.0",
-     elixir: "~> 1.5.1",
+     elixir: "~> 1.6",
      target: @target,
-     archives: [nerves_bootstrap: "~> 0.7"],
+     archives: [nerves_bootstrap: "~> 1.0"],
      deps_path: "deps/#{@target}",
      build_path: "_build/#{@target}",
      build_embedded: Mix.env == :prod,
